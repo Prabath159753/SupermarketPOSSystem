@@ -1,3 +1,8 @@
+/**
+  * @ author : Kavishka Prabath
+  * @ since : 0.1.0
+**/
+
 DROP DATABASE IF EXISTS supermarket;
 CREATE DATABASE IF NOT EXISTS supermarket;
 SHOW DATABASES ;
