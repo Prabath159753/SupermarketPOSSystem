@@ -224,6 +224,23 @@ public class ManageCustomerFormController {
     }
 
     public void btnDelete_OnAction(ActionEvent actionEvent) {
+        String id = tblCustomers.getSelectionModel().getSelectedItem().getId();
+        try {
+            if (!existCustomer(id)) {
+                new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
+            }
+            /*  Delete customer */
+            customerBO.deleteCustomer(id);
+            tblCustomers.getItems().remove(tblCustomers.getSelectionModel().getSelectedItem());
+            tblCustomers.getSelectionModel().clearSelection();
+            initUI();
+            new Alert(Alert.AlertType.CONFIRMATION, "Successfully delete customer details associated with customer id " + id).show();
+
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to delete the customer " + id).show();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public void navigateToHome(MouseEvent mouseEvent) {
