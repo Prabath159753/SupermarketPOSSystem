@@ -7,7 +7,6 @@ import lk.superMarket.pos.dto.CustomerDTO;
 import lk.superMarket.pos.entity.Customer;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 /**
  * @author : Kavishka Prabath
@@ -32,6 +31,12 @@ public class CustomerBOImpl implements CustomerBO {
     @Override
     public String generateNewID() throws SQLException, ClassNotFoundException {
         return customerDAO.generateNewID();
+    }
+
+    @Override
+    public boolean updateCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
+        return customerDAO.update(new Customer(dto.getId(), dto.getTitle(), dto.getName(), dto.getAddress(),
+                dto.getCity(), dto.getProvince(), dto.getPostalCode()));
     }
 
 }

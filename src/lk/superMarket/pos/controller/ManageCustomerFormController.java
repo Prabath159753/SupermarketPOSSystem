@@ -143,8 +143,31 @@ public class ManageCustomerFormController {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            btnAddNewCustomer.fire();
+        } else {
+            try {
+                if (!existCustomer(id)) {
+                    new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
+                }
+                /* Update Customer */
+                CustomerDTO customerDTO = new CustomerDTO(id, title, name, address, city, province, postalCode);
+                customerBO.updateCustomer(customerDTO);
+                new Alert(Alert.AlertType.CONFIRMATION, "Successfully update customer details associated with customer id " + id).show();
+            } catch (SQLException e) {
+                new Alert(Alert.AlertType.ERROR, "Failed to update the customer " + id + e.getMessage()).show();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            CustomerTM selectedCustomer = tblCustomers.getSelectionModel().getSelectedItem();
+            selectedCustomer.setTitle(title);
+            selectedCustomer.setName(name);
+            selectedCustomer.setAddress(address);
+            selectedCustomer.setCity(city);
+            selectedCustomer.setProvince(province);
+            selectedCustomer.setPostalCode(postalCode);
+            tblCustomers.refresh();
         }
+        btnAddNewCustomer.fire();
     }
 
     public void btnSearch_OnAction(ActionEvent actionEvent) {
