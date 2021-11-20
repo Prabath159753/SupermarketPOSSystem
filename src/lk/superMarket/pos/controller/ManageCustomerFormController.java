@@ -21,6 +21,9 @@ import java.util.List;
  **/
 
 public class ManageCustomerFormController {
+
+    private final CustomerBO customerBO = (CustomerBO) BoFactory.getBOFactory().getBO(BoFactory.BoTypes.CUSTOMER);
+
     public AnchorPane root;
     public TextField txtCustomerId;
     public ComboBox cmbCustomerTitle;
@@ -35,10 +38,41 @@ public class ManageCustomerFormController {
     public Button btnSave;
     public Button btnDelete;
 
-    private final CustomerBO customerBO = (CustomerBO) BoFactory.getBOFactory().getBO(BoFactory.BoTypes.CUSTOMER);
-
     public void initialize() {
+        tblCustomers.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("id"));
+        tblCustomers.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("title"));
+        tblCustomers.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("name"));
+        tblCustomers.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("address"));
+        tblCustomers.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("city"));
+        tblCustomers.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("province"));
+        tblCustomers.getColumns().get(6).setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+
         initUI();
+
+        tblCustomers.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            btnSearch.setDisable(true);
+            btnDelete.setDisable(newValue == null);
+            btnSave.setText(newValue != null ? "Update" : "Save");
+            btnSave.setDisable(newValue == null);
+            if (newValue != null) {
+                txtCustomerId.setText(newValue.getId());
+                cmbCustomerTitle.setValue(newValue.getTitle());
+                txtCustomerName.setText(newValue.getName());
+                txtCustomerAddress.setText(newValue.getAddress());
+                cmbCustomerProvince.setValue(newValue.getProvince());
+                txtCustomerCity.setText(newValue.getCity());
+                txtCustomerPostalCode.setText(newValue.getPostalCode());
+                txtCustomerId.setDisable(false);
+                cmbCustomerTitle.setDisable(false);
+                txtCustomerName.setDisable(false);
+                txtCustomerAddress.setDisable(false);
+                cmbCustomerProvince.setDisable(false);
+                txtCustomerCity.setDisable(false);
+                txtCustomerPostalCode.setDisable(false);
+            }
+        });
+        txtCustomerPostalCode.setOnAction(event -> btnSave.fire());
+        loadAllCustomers();
 
         cmbCustomerProvince.getItems().addAll(
                 "Southern Province", "Western Province", "Central Province", "Eastern Province", "Northern Province", "North Western Province", "North Central Province", "Uva Province", "Sabaragamuwa Province"
@@ -74,6 +108,22 @@ public class ManageCustomerFormController {
         btnSave.setDisable(true);
         btnDelete.setDisable(true);
         btnSearch.setDisable(false);
+    }
+
+    private void loadAllCustomers() {
+        tblCustomers.getItems().clear();
+        try {
+            ArrayList<CustomerDTO> allCustomers = customerBO.getAllCustomer();
+            for (CustomerDTO customer : allCustomers) {
+                tblCustomers.getItems().add(new CustomerTM(
+                        customer.getId(), customer.getTitle(), customer.getName(), customer.getAddress(),
+                        customer.getCity(), customer.getProvince(), customer.getPostalCode()));
+            }
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
     }
 
     public void btnAddNew_OnAction(ActionEvent actionEvent) {

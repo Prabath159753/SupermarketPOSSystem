@@ -4,6 +4,7 @@ import lk.superMarket.pos.bo.SuperBO;
 import lk.superMarket.pos.dto.CustomerDTO;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * @author : Kavishka Prabath
@@ -19,5 +20,7 @@ public interface CustomerBO extends SuperBO {
     String generateNewID() throws SQLException, ClassNotFoundException;
 
     boolean updateCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException;
+
+    ArrayList<CustomerDTO> getAllCustomer() throws SQLException, ClassNotFoundException;
 
 }
