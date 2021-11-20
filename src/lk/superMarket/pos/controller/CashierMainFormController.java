@@ -40,7 +40,30 @@ public class CashierMainFormController {
     }
 
     public void navigate(MouseEvent event) throws IOException {
+        if (event.getSource() instanceof ImageView) {
+            ImageView icon = (ImageView) event.getSource();
 
+            Parent root = null;
+            Stage primaryStage = (Stage) (this.root.getScene().getWindow());
+
+            switch (icon.getId()) {
+                case "imgCustomer":
+                    root = FXMLLoader.load(this.getClass().getResource("../view/ManageCustomerForm.fxml"));
+                    primaryStage.setTitle("CASHIER MAIN VIEW | MANAGE CUSTOMER FORM");
+                    break;
+            }
+
+            if (root != null) {
+                Scene subScene = new Scene(root);
+                primaryStage.setScene(subScene);
+                primaryStage.centerOnScreen();
+
+                TranslateTransition tt = new TranslateTransition(Duration.millis(350), subScene.getRoot());
+                tt.setFromX(-subScene.getWidth());
+                tt.setToX(0);
+                tt.play();
+            }
+        }
     }
 
     public void playMouseEnterAnimation(MouseEvent event) {

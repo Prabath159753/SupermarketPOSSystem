@@ -1,5 +1,7 @@
 package lk.superMarket.pos.dao;
 
+import lk.superMarket.pos.dao.custom.impl.CustomerDAOImpl;
+
 /**
  * @author : Kavishka Prabath
  * @since : 0.1.0
@@ -20,11 +22,14 @@ public class DAOFactory {
 
     public SuperDAO getDAO(DAOTypes types) {
         switch (types) {
+            case CUSTOMER:
+                return new CustomerDAOImpl();
             default:
                 return null;
         }
     }
 
     public enum DAOTypes {
+        CUSTOMER
     }
 }
