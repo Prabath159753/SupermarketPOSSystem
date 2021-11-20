@@ -1,15 +1,22 @@
 package lk.superMarket.pos.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import lk.superMarket.pos.bo.BoFactory;
 import lk.superMarket.pos.bo.custom.CustomerBO;
 import lk.superMarket.pos.dto.CustomerDTO;
 import lk.superMarket.pos.view.tdm.CustomerTM;
 
+import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -221,6 +228,49 @@ public class ManageCustomerFormController {
     }
 
     public void btnSearch_OnAction(ActionEvent actionEvent) {
+        btnSave.setDisable(true);
+        txtCustomerId.setEditable(true);
+
+        try {
+            if (!existCustomer(txtCustomerId.getText())) {
+                new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + txtCustomerId.getText()).show();
+                txtCustomerId.clear();
+                cmbCustomerTitle.getSelectionModel().clearSelection();
+                txtCustomerName.clear();
+                txtCustomerAddress.clear();
+                cmbCustomerProvince.getSelectionModel().clearSelection();
+                txtCustomerCity.clear();
+                txtCustomerPostalCode.clear();
+                txtCustomerId.requestFocus();
+
+            } else {
+                /* Search Customer */
+                CustomerDTO customerDTO = customerBO.searchCustomer(txtCustomerId.getText());
+                cmbCustomerTitle.setValue(customerDTO.getTitle());
+                cmbCustomerProvince.setValue(customerDTO.getProvince());
+                txtCustomerName.setText(customerDTO.getName());
+                txtCustomerAddress.setText(customerDTO.getAddress());
+                txtCustomerCity.setText(customerDTO.getCity());
+                txtCustomerPostalCode.setText(customerDTO.getPostalCode());
+
+                btnSave.setDisable(true);
+                cmbCustomerTitle.setDisable(true);
+                txtCustomerName.setDisable(false);
+                txtCustomerAddress.setDisable(false);
+                cmbCustomerProvince.setDisable(true);
+                txtCustomerCity.setDisable(false);
+                txtCustomerPostalCode.setDisable(false);
+                txtCustomerName.setEditable(false);
+                txtCustomerAddress.setEditable(false);
+                txtCustomerCity.setEditable(false);
+                txtCustomerPostalCode.setEditable(false);
+
+            }
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to search the customer " + txtCustomerId.getText() + e.getMessage()).show();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public void btnDelete_OnAction(ActionEvent actionEvent) {
@@ -243,7 +293,15 @@ public class ManageCustomerFormController {
         }
     }
 
-    public void navigateToHome(MouseEvent mouseEvent) {
+    public void navigateToHome(MouseEvent mouseEvent) throws IOException {
+        URL resource = this.getClass().getResource("../view/CashierMainForm.fxml");
+        Parent root = FXMLLoader.load(resource);
+        Scene scene = new Scene(root);
+        Stage primaryStage = (Stage) (this.root.getScene().getWindow());
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("CASHIER MAIN VIEW");
+        primaryStage.centerOnScreen();
+        Platform.runLater(() -> primaryStage.sizeToScene());
     }
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {

@@ -56,5 +56,10 @@ public class CustomerBOImpl implements CustomerBO {
         return customerDAO.delete(id);
     }
 
+    public CustomerDTO searchCustomer(String s) throws SQLException, ClassNotFoundException {
+        Customer c = customerDAO.search(s);
+        return new CustomerDTO(c.getId(), c.getTitle(), c.getName(), c.getAddress(), c.getCity(), c.getProvince(), c.getPostalCode());
+    }
+
 }
 
