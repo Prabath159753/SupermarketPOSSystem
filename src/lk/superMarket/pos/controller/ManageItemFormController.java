@@ -209,6 +209,25 @@ public class ManageItemFormController {
     }
 
     public void btnDelete_OnAction(ActionEvent actionEvent) {
+        String itemCode = tblItems.getSelectionModel().getSelectedItem().getItemCode();
+        try {
+            if (!existItem(itemCode)) {
+                new Alert(Alert.AlertType.ERROR, "There is no such item associated with the id " + itemCode).show();
+            }
+
+            /* Delete item */
+            itemBO.deleteItem(itemCode);
+            tblItems.getItems().remove(tblItems.getSelectionModel().getSelectedItem());
+            tblItems.getSelectionModel().clearSelection();
+            initUI();
+            new Alert(Alert.AlertType.CONFIRMATION, "Successfully delete item details associated with itemCode " + itemCode).show();
+
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to delete the item " + itemCode).show();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        btnSearch.setDisable(false);
     }
 
     public void btnSearch_OnAction(ActionEvent actionEvent) {
