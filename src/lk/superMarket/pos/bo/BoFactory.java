@@ -1,6 +1,7 @@
 package lk.superMarket.pos.bo;
 
 import lk.superMarket.pos.bo.custom.impl.CustomerBOImpl;
+import lk.superMarket.pos.bo.custom.impl.ItemBOImpl;
 
 /**
  * @author : Kavishka Prabath
@@ -24,12 +25,14 @@ public class BoFactory {
         switch (types) {
             case CUSTOMER:
                 return new CustomerBOImpl();
+            case ITEM:
+                return new ItemBOImpl();
             default:
                 return null;
         }
     }
 
     public enum BoTypes {
-        CUSTOMER
+        CUSTOMER, ITEM
     }
 }
