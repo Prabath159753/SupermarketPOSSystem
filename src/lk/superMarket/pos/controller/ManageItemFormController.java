@@ -26,7 +26,7 @@ public class ManageItemFormController {
     public TextField txtItemUnitPrice;
     public TextField txtItemQtyOnHand;
     public TextField txtDiscount;
-    public TableView tblItems;
+    public TableView<ItemTM> tblItems;
     public Button btnAddNewItem;
     public Button btnSave;
     public Button btnDelete;
@@ -110,6 +110,30 @@ public class ManageItemFormController {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
+        } else {
+            try {
+                if (!existItem(itemCode)) {
+                    new Alert(Alert.AlertType.ERROR, "There is no such item associated with the id " + itemCode).show();
+                }
+
+                /* Update Item */
+                ItemDTO dto = new ItemDTO(itemCode, description, size, unitPrice, qtyOnHand, discount);
+                itemBO.updateItem(dto);
+                new Alert(Alert.AlertType.CONFIRMATION, "Successfully update item details associated with customer itemCode " + itemCode).show();
+            } catch (SQLException e) {
+                new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            ItemTM selectedItem = tblItems.getSelectionModel().getSelectedItem();
+            selectedItem.setDescription(description);
+            selectedItem.setPackSize(size);
+            selectedItem.setUnitPrice(unitPrice);
+            selectedItem.setQtyOnHand(qtyOnHand);
+            selectedItem.setDiscount(discount);
+
+            tblItems.refresh();
         }
         btnSearch.setDisable(false);
         btnAddNewItem.fire();

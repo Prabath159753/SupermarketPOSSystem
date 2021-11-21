@@ -18,4 +18,6 @@ public interface ItemBO extends SuperBO {
 
     String generateNewID() throws SQLException, ClassNotFoundException;
 
+    boolean updateItem(ItemDTO dto) throws SQLException, ClassNotFoundException;
+
 }
