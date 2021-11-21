@@ -4,6 +4,7 @@ import lk.superMarket.pos.bo.SuperBO;
 import lk.superMarket.pos.dto.ItemDTO;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * @author : Kavishka Prabath
@@ -19,5 +20,7 @@ public interface ItemBO extends SuperBO {
     String generateNewID() throws SQLException, ClassNotFoundException;
 
     boolean updateItem(ItemDTO dto) throws SQLException, ClassNotFoundException;
+
+    ArrayList<ItemDTO> getAllItems() throws SQLException, ClassNotFoundException;
 
 }

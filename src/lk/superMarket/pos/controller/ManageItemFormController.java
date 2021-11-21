@@ -2,6 +2,7 @@ package lk.superMarket.pos.controller;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import lk.superMarket.pos.bo.BoFactory;
@@ -11,6 +12,7 @@ import lk.superMarket.pos.view.tdm.ItemTM;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * @author : Kavishka Prabath
@@ -18,7 +20,9 @@ import java.sql.SQLException;
  **/
 
 public class ManageItemFormController {
+
     private final ItemBO itemBO = (ItemBO) BoFactory.getBOFactory().getBO(BoFactory.BoTypes.ITEM);
+
     public AnchorPane root;
     public TextField txtItemCode;
     public TextArea txtItemDescription;
@@ -33,6 +37,38 @@ public class ManageItemFormController {
     public Button btnSearch;
 
     public void initialize() {
+        tblItems.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("itemCode"));
+        tblItems.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("description"));
+        tblItems.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("packSize"));
+        tblItems.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        tblItems.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("qtyOnHand"));
+        tblItems.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("discount"));
+
+        initUI();
+
+        tblItems.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            btnDelete.setDisable(newValue == null);
+            btnSave.setText(newValue != null ? "Update" : "Save");
+            btnSave.setDisable(newValue == null);
+
+            if (newValue != null) {
+                txtItemCode.setText(newValue.getItemCode());
+                txtItemDescription.setText(newValue.getDescription());
+                cmbItemSize.setValue(newValue.getPackSize());
+                txtItemUnitPrice.setText(newValue.getUnitPrice().setScale(2).toString());
+                txtItemQtyOnHand.setText(newValue.getQtyOnHand() + "");
+                txtDiscount.setText(newValue.getDiscount() + "");
+                txtItemCode.setDisable(false);
+                txtItemDescription.setDisable(false);
+                cmbItemSize.setDisable(false);
+                txtItemUnitPrice.setDisable(false);
+                txtItemQtyOnHand.setDisable(false);
+                txtDiscount.setDisable(false);
+            }
+        });
+
+        txtItemQtyOnHand.setOnAction(event -> btnSave.fire());
+        loadAllItems();
 
         cmbItemSize.getItems().addAll(
                 "Small", "Medium", "Large", "Bottle"
@@ -41,6 +77,39 @@ public class ManageItemFormController {
 
         });
 
+    }
+
+    private void initUI() {
+        txtItemCode.clear();
+        txtItemDescription.clear();
+        cmbItemSize.getSelectionModel().clearSelection();
+        txtItemUnitPrice.clear();
+        txtItemQtyOnHand.clear();
+        txtDiscount.clear();
+        txtItemCode.setDisable(false);
+        txtItemDescription.setDisable(true);
+        cmbItemSize.setDisable(true);
+        txtItemUnitPrice.setDisable(true);
+        txtItemQtyOnHand.setDisable(true);
+        txtItemCode.setEditable(true);
+        btnSave.setDisable(true);
+        btnDelete.setDisable(true);
+        btnSearch.setDisable(false);
+    }
+
+    private void loadAllItems() {
+        tblItems.getItems().clear();
+        try {
+            ArrayList<ItemDTO> allItems = itemBO.getAllItems();
+            for (ItemDTO item : allItems) {
+                tblItems.getItems().add(new ItemTM(item.getItemCode(), item.getDescription(), item.getPackSize(), item.getUnitPrice(), item.getQtyOnHand(), item.getDiscount()));
+            }
+
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public void navigateToBack(MouseEvent mouseEvent) {

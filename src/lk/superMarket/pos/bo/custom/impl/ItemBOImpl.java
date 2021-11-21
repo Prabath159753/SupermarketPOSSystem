@@ -7,6 +7,7 @@ import lk.superMarket.pos.dto.ItemDTO;
 import lk.superMarket.pos.entity.Item;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * @author : Kavishka Prabath
@@ -35,5 +36,15 @@ public class ItemBOImpl implements ItemBO {
     @Override
     public boolean updateItem(ItemDTO dto) throws SQLException, ClassNotFoundException {
         return itemDAO.update(new Item(dto.getItemCode(), dto.getDescription(), dto.getPackSize(), dto.getUnitPrice(), dto.getQtyOnHand(), dto.getDiscount()));
+    }
+
+    @Override
+    public ArrayList<ItemDTO> getAllItems() throws SQLException, ClassNotFoundException {
+        ArrayList<ItemDTO> allItems = new ArrayList<>();
+        ArrayList<Item> all = itemDAO.getAll();
+        for (Item i : all) {
+            allItems.add(new ItemDTO(i.getItemCode(), i.getDescription(), i.getPackSize(), i.getUnitPrice(), i.getQtyOnHand(), i.getDiscount()));
+        }
+        return allItems;
     }
 }
