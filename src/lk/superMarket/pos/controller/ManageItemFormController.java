@@ -1,16 +1,23 @@
 package lk.superMarket.pos.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import lk.superMarket.pos.bo.BoFactory;
 import lk.superMarket.pos.bo.custom.ItemBO;
 import lk.superMarket.pos.dto.ItemDTO;
 import lk.superMarket.pos.view.tdm.ItemTM;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -112,7 +119,15 @@ public class ManageItemFormController {
         }
     }
 
-    public void navigateToBack(MouseEvent mouseEvent) {
+    public void navigateToBack(MouseEvent mouseEvent) throws IOException {
+        URL resource = this.getClass().getResource("../view/AdminMainForm.fxml");
+        Parent root = FXMLLoader.load(resource);
+        Scene scene = new Scene(root);
+        Stage primaryStage = (Stage) (this.root.getScene().getWindow());
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("ADMIN MAIN VIEW");
+        primaryStage.centerOnScreen();
+        Platform.runLater(() -> primaryStage.sizeToScene());
     }
 
     public void btnAddNew_OnAction(ActionEvent actionEvent) {
@@ -231,6 +246,49 @@ public class ManageItemFormController {
     }
 
     public void btnSearch_OnAction(ActionEvent actionEvent) {
+        btnSave.setDisable(true);
+        txtItemCode.setEditable(true);
+
+        try {
+            if (!existItem(txtItemCode.getText())) {
+                new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + txtItemCode.getText()).show();
+                txtItemCode.clear();
+                cmbItemSize.getSelectionModel().clearSelection();
+                txtItemDescription.clear();
+                txtItemUnitPrice.clear();
+                txtItemQtyOnHand.clear();
+                txtDiscount.clear();
+
+            } else {
+                /* Search Item */
+                ItemDTO itemDTO = itemBO.searchItem(txtItemCode.getText());
+                txtItemCode.setText(itemDTO.getItemCode());
+                txtItemDescription.setText(itemDTO.getDescription());
+                cmbItemSize.setValue(itemDTO.getPackSize());
+                txtItemUnitPrice.setText(itemDTO.getUnitPrice().setScale(2).toString());
+                txtItemQtyOnHand.setText(itemDTO.getQtyOnHand() + "");
+                txtDiscount.setText(itemDTO.getDiscount() + "");
+
+                btnSave.setDisable(false);
+                txtItemCode.setDisable(false);
+                cmbItemSize.setDisable(false);
+                txtItemDescription.setDisable(false);
+                txtItemUnitPrice.setDisable(false);
+                txtItemQtyOnHand.setDisable(false);
+                txtDiscount.setDisable(false);
+                cmbItemSize.setEditable(false);
+                txtItemDescription.setEditable(false);
+                txtItemUnitPrice.setEditable(false);
+                txtItemQtyOnHand.setEditable(false);
+                txtDiscount.setEditable(false);
+
+            }
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to search the customer " + txtItemCode.getText() + e.getMessage()).show();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        tblItems.refresh();
     }
 
     private String generateNewId() {

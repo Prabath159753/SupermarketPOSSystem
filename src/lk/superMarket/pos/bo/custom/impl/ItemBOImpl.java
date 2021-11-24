@@ -52,4 +52,10 @@ public class ItemBOImpl implements ItemBO {
     public boolean deleteItem(String itemCode) throws SQLException, ClassNotFoundException {
         return itemDAO.delete(itemCode);
     }
+
+    @Override
+    public ItemDTO searchItem(String code) throws SQLException, ClassNotFoundException {
+        Item item = itemDAO.search(code);
+        return new ItemDTO(item.getItemCode(), item.getDescription(), item.getPackSize(), item.getUnitPrice(), item.getQtyOnHand(), item.getDiscount());
+    }
 }
