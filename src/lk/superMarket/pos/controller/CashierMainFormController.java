@@ -51,6 +51,13 @@ public class CashierMainFormController {
                     root = FXMLLoader.load(this.getClass().getResource("../view/ManageCustomerForm.fxml"));
                     primaryStage.setTitle("CASHIER MAIN VIEW | MANAGE CUSTOMER FORM");
                     break;
+                case "imgOrders":
+                    root = FXMLLoader.load(this.getClass().getResource("../view/PlaceOrderForm.fxml"));
+                    primaryStage.setTitle("CASHIER MAIN VIEW | PLACE ORDER FORM");
+                    break;
+                case "imgLogOut":
+                    root = FXMLLoader.load(this.getClass().getResource("../view/LogInPageForm.fxml"));
+                    break;
             }
 
             if (root != null) {
