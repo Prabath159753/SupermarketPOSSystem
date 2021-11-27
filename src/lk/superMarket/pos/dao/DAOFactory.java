@@ -2,6 +2,8 @@ package lk.superMarket.pos.dao;
 
 import lk.superMarket.pos.dao.custom.impl.CustomerDAOImpl;
 import lk.superMarket.pos.dao.custom.impl.ItemDAOImpl;
+import lk.superMarket.pos.dao.custom.impl.OrderDAOImpl;
+import lk.superMarket.pos.dao.custom.impl.OrderDetailDAOImpl;
 
 /**
  * @author : Kavishka Prabath
@@ -27,12 +29,16 @@ public class DAOFactory {
                 return new CustomerDAOImpl();
             case ITEM:
                 return new ItemDAOImpl();
+            case ORDER:
+                return new OrderDAOImpl();
+            case ORDERDETAILS:
+                return new OrderDetailDAOImpl();
             default:
                 return null;
         }
     }
 
     public enum DAOTypes {
-        CUSTOMER, ITEM
+        CUSTOMER, ITEM, ORDER, ORDERDETAILS
     }
 }

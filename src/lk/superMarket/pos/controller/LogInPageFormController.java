@@ -26,7 +26,7 @@ public class LogInPageFormController {
 
     public void btnLogInOnAction(ActionEvent actionEvent) throws IOException {
 
-        if (txtUserName.getText().equals("Admin")){
+        if (txtUserName.getText().equals("Admin")) {
 
             Stage logStage = (Stage) btnLogIn.getScene().getWindow();
             logStage.close();
@@ -40,7 +40,7 @@ public class LogInPageFormController {
             stage.centerOnScreen();
             stage.setScene(scene);
             stage.show();
-        }else if (txtUserName.getText().equals("Cashier")){
+        } else if (txtUserName.getText().equals("Cashier")) {
 
             Stage logStage = (Stage) btnLogIn.getScene().getWindow();
             logStage.close();

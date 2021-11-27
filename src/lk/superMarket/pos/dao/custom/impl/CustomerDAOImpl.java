@@ -82,5 +82,4 @@ public class CustomerDAOImpl implements CustomerDAO {
             return "C-001";
         }
     }
-
 }
