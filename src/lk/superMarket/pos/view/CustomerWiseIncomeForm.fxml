@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="root" prefHeight="505.0" prefWidth="900.0" stylesheets="@assets/style/Style..css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.superMarket.pos.controller.CustomerWiseIncomeFormController">
+   <children>
+      <Label alignment="CENTER" layoutX="98.0" layoutY="119.0" prefHeight="43.0" prefWidth="447.0" styleClass="liner-title" text="View Report" textFill="WHITE" AnchorPane.leftAnchor="72.0" AnchorPane.topAnchor="14.0">
+         <font>
+            <Font name="Impact" size="25.0" />
+         </font>
+      </Label>
+      <Separator layoutX="534.0" layoutY="34.0" prefHeight="3.0" prefWidth="354.0" style="-fx-background-color: black;" AnchorPane.topAnchor="34.0" />
+      <ImageView fitHeight="55.0" fitWidth="92.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#navigateToBack" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
+         <image>
+            <Image url="@assets/image/home-icon.png" />
+         </image>
+      </ImageView>
+      <TableView fx:id="tblCustomerWiseIncome" layoutX="21.0" layoutY="83.0" prefHeight="398.0" prefWidth="375.0">
+        <columns>
+          <TableColumn prefWidth="182.0" text="Customer Id" />
+          <TableColumn prefWidth="192.0" text="Total Income" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>
