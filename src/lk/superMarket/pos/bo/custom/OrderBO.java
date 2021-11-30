@@ -4,6 +4,7 @@ import lk.superMarket.pos.bo.SuperBO;
 import lk.superMarket.pos.dto.CustomerDTO;
 import lk.superMarket.pos.dto.ItemDTO;
 import lk.superMarket.pos.dto.OrderDTO;
+import lk.superMarket.pos.dto.ReportDTO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,5 +33,7 @@ public interface OrderBO extends SuperBO {
     String generateNewOrderId() throws SQLException, ClassNotFoundException;
 
     boolean purchaseOrder(OrderDTO dto) throws SQLException, ClassNotFoundException;
+
+    ArrayList<ReportDTO> getAllOrders() throws SQLException, ClassNotFoundException;
 
 }

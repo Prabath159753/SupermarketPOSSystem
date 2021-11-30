@@ -7,10 +7,7 @@ import lk.superMarket.pos.dao.custom.ItemDAO;
 import lk.superMarket.pos.dao.custom.OrderDAO;
 import lk.superMarket.pos.dao.custom.OrderDetailDAO;
 import lk.superMarket.pos.db.DbConnection;
-import lk.superMarket.pos.dto.CustomerDTO;
-import lk.superMarket.pos.dto.ItemDTO;
-import lk.superMarket.pos.dto.OrderDTO;
-import lk.superMarket.pos.dto.OrderDetailDTO;
+import lk.superMarket.pos.dto.*;
 import lk.superMarket.pos.entity.Customer;
 import lk.superMarket.pos.entity.Item;
 import lk.superMarket.pos.entity.OrderDetails;
@@ -131,5 +128,16 @@ public class OrderBOImpl implements OrderBO {
         connection.commit();
         connection.setAutoCommit(true);
         return true;
+    }
+
+    @Override
+    public ArrayList<ReportDTO> getAllOrders() throws SQLException, ClassNotFoundException {
+        ArrayList<ReportDTO> allOrders = new ArrayList<>();
+        ArrayList<Orders> all = orderDAO.getAll();
+        for (Orders orders : all) {
+            allOrders.add(new ReportDTO(orders.getOrderId(), orders.getCustId(), orders.getOrderDate(),
+                    orders.getOrderTime(), orders.getTotal()));
+        }
+        return allOrders;
     }
 }
